@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-tac-Toe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: cursive;
+        }
+        body {
+            width: 100%;
+            text-align: center;
+        }
+        .bg {
+            background-image: url('https://m.media-amazon.com/images/I/71V21L1U9CL.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 100%;
+        }
+        .conta {
+            background-color: rgba(255, 255, 255, 0);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            background-size: cover;
+        }
+        .container {
+            height: 70vmin;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .game {
+            width: 80vmin;
+            height: 60vmin;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 5vmin;
+        }
+        .box {
+            width: 18vmin;
+            height: 18vmin;
+            border-radius: 1rem;
+            box-shadow: 0 0 18px 10px #48abe0;
+            border: none;
+            background-color: #3a5eee;
+            color: #9C3848;
+            font-size: 8vmin;
+            padding-top: 3rem;
+            text-align: center;
+        }
+        h2 {
+            color: #fce3e3;
+            letter-spacing: 5px;
+            font-size: 10vmin;
+            -webkit-animation: text 1s ease-in-out infinite alternate;
+            -moz-animation: text 1s ease-in-out infinite alternate;
+            animation: text 1s ease-in-out infinite alternate;
+        }
+        @-webkit-keyframes text {
+            from {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+            }
+            to {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+            }
+        }
+        #reset {
+            background-color: #f14f93;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 1.3rem;
+            color: #fff;
+            font-size: 4vmin;
+            margin: 10px;
+            margin-top: 50px;
+            letter-spacing: 5px;
+            font-weight: 900;
+        }
+        .new {
+            background-color: #f14f93;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 1.3rem;
+            color: #fff;
+            font-size: 4vmin;
+            letter-spacing: 5px;
+            font-weight: 900;
+        }
+        .msg {
+            font-size: 6vmin;
+            color: #feff94;
+            padding: 2rem;
+        }
+        .hide {
+            display: none;
+        }
+        .confetti {
+            position: absolute;
+            top: 0%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+    </style>
+</head>
+<body class="bg">
+    <div id="confetti-container"></div>
+    <div class="conta">
+        <h2>Tic-Tac-Toe</h2>
+        <div class="msg-box hide">
+            <p class="msg">!!Winner!!</p>
+            <button class="new">New Game!</button>
+        </div>
+        <div class="container">
+            <div class="game">
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
+            </div>
+        </div>
+        <button id="reset">RESET GAME</button>
+    </div>
+</body>
+<script>
+    let boxes = document.querySelectorAll(".box");
+    let reset = document.querySelector("#reset");
+    let newbtn = document.querySelector(".new");
+    let msgbox = document.querySelector(".msg-box");
+    let msg = document.querySelector(".msg");
+    let out = 0;
+    let confettiInterval;
+
+    let turnO = true;
+    const win = [
+        [0, 1, 2],
+        [0, 3, 6],
+        [0, 4, 8],
+        [1, 4, 7],
+        [2, 5, 8],
+        [2, 4, 6],
+        [3, 4, 5],
+        [6, 7, 8],
+    ];
+
+    const resetgame = () => {
+        turnO = true;
+        enablebox();
+        msgbox.classList.add("hide");
+        clearInterval(confettiInterval); // Stop confetti interval
+        removeConfetti(); // Remove existing confetti elements
+        out = 0; // Reset the move counter
+    };
+
+    const enablebox = () => {
+        for (let box of boxes) {
+            box.disabled = false;
+            box.innerHTML = "";
+        }
+    };
+
+    boxes.forEach((box) => {
+        box.addEventListener("click", () => {
+            box.style.padding="10px";
+            if (turnO) {
+                box.innerText = "O";
+                box.style.color = "#ffabe5";
+                turnO = false;
+            } else {
+                box.innerText = "X";
+                box.style.color = "#d89fff";
+                turnO = true;
+            }
+            box.disabled = true;
+            out += 1;
+            check();
+        });
+    });
+
+    const disablebox = () => {
+        for (let box of boxes) {
+            box.disabled = true;
+        }
+    };
+
+    const showwinner = (winner) => {
+        msg.innerText = `Congratulations, Winner is ${winner}`;
+        msgbox.classList.remove("hide");
+        confettiInterval = setInterval(createconfetti, 50); // Start confetti
+        disablebox();
+    };
+
+    const draw = () => {
+        msg.innerText = "The Game is Draw!";
+        msgbox.classList.remove("hide");
+        disablebox();
+    };
+
+    const check = () => {
+        for (let pattern of win) {
+            let val1 = boxes[pattern[0]].innerText;
+            let val2 = boxes[pattern[1]].innerText;
+            let val3 = boxes[pattern[2]].innerText;
+            if (val1 !== "" && val2 !== "" && val3 !== "") {
+                if (val1 === val2 && val1 === val3) {
+                    showwinner(val1);
+                    return;
+                }
+            }
+        }
+        if (out === 9) {
+            draw();
+        }
+    };
+
+    newbtn.addEventListener("click", resetgame);
+    reset.addEventListener("click", resetgame);
+
+    function createconfetti() {
+        const confettiContainer = document.getElementById('confetti-container');
+        const confettiElement = document.createElement('div');
+
+        confettiElement.classList.add('confetti');
+        confettiElement.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        confettiElement.style.left = `${Math.random() * 100}vw`;
+        confettiElement.style.transform = `rotate(${Math.random() * 360}deg)`;
+        confettiElement.style.animationDuration = `${Math.random() * 3 + 2}s`;
+
+        confettiContainer.appendChild(confettiElement);
+
+        confettiElement.addEventListener('animationend', () => {
+            confettiElement.remove();
+        });
+    }
+
+    function removeConfetti() {
+        const confettiContainer = document.getElementById('confetti-container');
+        while (confettiContainer.firstChild) {
+            confettiContainer.removeChild(confettiContainer.firstChild); // Remove each confetti element
+        }
+    }
+</script>
+
+
+</html>

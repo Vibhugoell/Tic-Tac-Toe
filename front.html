@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body{
+            height: 100%;
+        }
+        .bg{
+            background-image: url('https://m.media-amazon.com/images/I/71V21L1U9CL.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 100%;
+        }
+        button{
+             background-color: hsl(253, 100%, 71%);
+            border-radius: 3rem;
+            border: none;
+            padding: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            font-size: 25px;
+            margin-left: 40%;
+            margin-top: 35%;
+            box-shadow: 0 0 50px 15px #48abe0;
+        }
+        .text{
+            color: #eee2e2;
+            -webkit-animation: text 1s ease-in-out infinite alternate;
+            -moz-animation: text 1s ease-in-out infinite alternate;
+            animation: text 1s ease-in-out infinite alternate;
+        }
+
+        @-webkit-keyframes text {
+            from {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+            }
+            to {
+                text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+            }
+        }
+        
+    </style>
+</head>
+<body class="bg">
+    <button onclick="document.location='Tic-Tac-toe.html'" class="text" >START GAME</button>
+</body>
+</html>
